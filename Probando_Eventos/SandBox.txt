@@ -1,0 +1,95 @@
+
+enum _EVENT_ENUM {
+    ON_MAIN_LOOP,
+    ON_CONSOLE_LINE_RECEIVED,
+    ON_GCODE_RECEIVED,
+    ON_IDLE,
+    ON_SECOND_TICK,
+    ON_GET_PUBLIC_DATA,
+    ON_SET_PUBLIC_DATA,
+    ON_HALT,
+    ON_ENABLE,
+    NUMBER_OF_DEFINED_EVENTS
+};
+
+class Module {
+public:
+    Module() {};
+    virtual ~Module() {};
+    virtual void on_module_loaded() {};
+
+    void register_for_event(_EVENT_ENUM event_id);
+
+    // event callbacks, not every module will implement all of these
+    // there should be one for each _EVENT_ENUM
+    virtual void on_main_loop(void*) {};
+    virtual void on_console_line_received(void*) {};
+    virtual void on_gcode_received(void*) {};
+    virtual void on_idle(void*) {};
+    virtual void on_second_tick(void*) {};
+    virtual void on_get_public_data(void*) {};
+    virtual void on_set_public_data(void*) {};
+    virtual void on_halt(void*) {};
+    virtual void on_enable(void*) {};
+};
+
+typedef void (Module::* ModuleCallback)(void* argument);
+
+const ModuleCallback kernel_callback_functions[NUMBER_OF_DEFINED_EVENTS] = {
+    &Module::on_main_loop,
+    &Module::on_console_line_received,
+    &Module::on_gcode_received,
+    &Module::on_idle,
+    &Module::on_second_tick,
+    &Module::on_get_public_data,
+    &Module::on_set_public_data,
+    &Module::on_halt,
+    &Module::on_enable
+};
+
+void Module::register_for_event(_EVENT_ENUM event_id) {
+    // THEKERNEL->register_for_event(event_id, this);
+}
+
+void F0(int x) { printf("F0 %d\n", x); }
+void F1(int x) { printf("F1 %d\n", x); }
+void F2(int x) { printf("F2 %d\n", x); }
+
+typedef void (*Callback)(int);
+
+Callback AAA[] = {
+    &F0,
+    &F1,
+    &F2
+};
+
+std::tuple<string, uint32_t> CreatePerson() {
+    return { "Monica",32 };
+}
+
+
+    
+    queue_with_iterator<char, 12> pila;
+    pila.Add('c');
+    pila.Add('h');
+    pila.Add('a');
+    pila.Add('u');
+    pila.Add(' ');
+    pila.Add('M');
+    pila.Add('e');
+    pila.Add('c');
+    pila.Add('t');
+    pila.Add('o');
+    pila.Add('t');
+    pila.Add('o');
+
+    char CH;
+    pila.Set_Iterator_To_First();
+    while (pila.Next(CH))
+        std::cout << CH << std::endl;
+
+    std::cout << std::endl;
+
+    pila.Set_Iterator_To_Last();
+    while (pila.Next(CH))
+        std::cout << CH << std::endl;
